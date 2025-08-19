@@ -1,42 +1,124 @@
 <!DOCTYPE html>
 <html>
   <body>
-    <!-- 打字机效果 -->
-<div id="typewriter"></div>
-<script>
-  const text = "正在加载有趣的内容... 你想知道接下来会出现什么吗？";
-  let index = 0;
-  const speed = 50; // 打字速度（毫秒）
-  function type() {
-    if (index < text.length) {
-      document.getElementById("typewriter").innerHTML += text.charAt(index);
-      index++;
-      setTimeout(type, speed);
-    }
-  }
-  type();
-</script>
-    <!-- 猜数字游戏 -->
-<div>
-  <h3>来玩猜数字！1 - 100 之间～</h3>
-  <input type="number" id="guessInput" placeholder="输入数字">
-  <button onclick="checkGuess()">提交</button>
-  <p id="result"></p >
+    <!-- 猜数字游戏（升级版） -->
+<div class="guess-game">
+  <h3>🎮 猜数字大挑战！1 - 100 等你征服</h3>
+  <p>规则：系统生成 1-100 随机数，你有 <span id="chance">10</span> 次机会，试试能猜中吗？</p >
+  <input type="number" id="guessInput" placeholder="输入 1-100 的数字" min="1" max="100">
+  <button onclick="checkGuess()">提交猜测</button>
+  <button onclick="resetGame()">重新开始</button>
+  <p id="result" class="result-tip"></p >
+  <p id="history" class="history">已猜数字：</p >
 </div>
+
+<style>
+  .guess-game {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    max-width: 500px;
+    margin: 20px auto;
+  }
+  .result-tip {
+    margin: 10px 0;
+    padding: 8px;
+    border-radius: 4px;
+  }
+  .history {
+    color: #666;
+    font-size: 14px;
+  }
+  input, button {
+    margin: 8px 0;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  button {
+    cursor: pointer;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    transition: background 0.3s;
+  }
+  button:hover {
+    background: #45a049;
+  }
+</style>
+
 <script>
-  const target = Math.floor(Math.random() * 100) + 1; // 随机目标数字
+  let target = Math.floor(Math.random() * 100) + 1; // 目标数字
+  let chances = 10; // 初始机会
+  const historyList = []; // 存储已猜数字
+
   function checkGuess() {
     const guess = parseInt(document.getElementById("guessInput").value);
-    const result = document.getElementById("result");
+    const resultDom = document.getElementById("result");
+    const chanceDom = document.getElementById("chance");
+    const historyDom = document.getElementById("history");
+
+    // 输入校验
     if (isNaN(guess) || guess < 1 || guess > 100) {
-      result.innerText = "请输入 1 - 100 的数字！";
-    } else if (guess === target) {
-      result.innerText = "猜对啦！你也太会猜了吧 🎉";
-    } else if (guess < target) {
-      result.innerText = "太小啦！再大胆点～";
-    } else {
-      result.innerText = "太大啦！收敛一点～";
+      resultDom.innerText = "⚠️ 请输入 1-100 之间的有效数字！";
+      resultDom.style.background = "#ffe6e6";
+      return;
     }
+
+    // 重复猜测提示
+    if (historyList.includes(guess)) {
+      resultDom.innerText = `🙅 你已经猜过 ${guess} 啦，换个数字试试！`;
+      resultDom.style.background = "#fff3cd";
+      return;
+    }
+
+    // 记录猜测
+    historyList.push(guess);
+    historyDom.innerText = `已猜数字：${historyList.join("、")}`;
+    chances--;
+    chanceDom.innerText = chances;
+
+    // 结果判断
+    if (guess === target) {
+      resultDom.innerText = `🎉 恭喜猜对啦！目标数字就是 ${target}，剩余 ${chances} 次机会`;
+      resultDom.style.background = "#d4edda";
+      showRestartTip(); // 提示重新开始
+    } else if (chances === 0) {
+      resultDom.innerText = `💥 机会用完啦！正确数字是 ${target}，点击“重新开始”再挑战吧～`;
+      resultDom.style.background = "#f8d7da";
+      document.getElementById("guessInput").disabled = true; // 禁用输入
+    } else if (guess < target) {
+      resultDom.innerText = `📉 猜小啦！还剩 ${chances} 次机会，继续加油～`;
+      resultDom.style.background = "#e2f0cb";
+    } else {
+      resultDom.innerText = `📈 猜大啦！还剩 ${chances} 次机会，调整一下～`;
+      resultDom.style.background = "#cfe8f7";
+    }
+
+    // 清空输入框
+    document.getElementById("guessInput").value = "";
+  }
+
+  // 重新开始游戏
+  function resetGame() {
+    target = Math.floor(Math.random() * 100) + 1;
+    chances = 10;
+    historyList.length = 0; // 清空历史
+    document.getElementById("chance").innerText = chances;
+    document.getElementById("result").innerText = "";
+    document.getElementById("history").innerText = "已猜数字：";
+    document.getElementById("guessInput").disabled = false; // 启用输入
+    document.getElementById("guessInput").value = "";
+  }
+
+  // 猜对后提示
+  function showRestartTip() {
+    setTimeout(() => {
+      if (window.confirm("🎉 恭喜通关！要再来一轮挑战吗？")) {
+        resetGame();
+      }
+    }, 1000);
   }
 </script>
     <!-- 鼠标跟随小尾巴 -->
