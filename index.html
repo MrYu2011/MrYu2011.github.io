@@ -1,5 +1,82 @@
 <!DOCTYPE html>
 <html>
   <body>
+    <!-- 打字机效果 -->
+<div id="typewriter"></div>
+<script>
+  const text = "正在加载有趣的内容... 你想知道接下来会出现什么吗？";
+  let index = 0;
+  const speed = 50; // 打字速度（毫秒）
+  function type() {
+    if (index < text.length) {
+      document.getElementById("typewriter").innerHTML += text.charAt(index);
+      index++;
+      setTimeout(type, speed);
+    }
+  }
+  type();
+</script>
+    <!-- 点击换表情包 -->
+< img id="emoji" src="https://cdn-icons-png.flaticon.com/512/180/180870.png" 
+     alt="互动表情包" style="cursor: pointer; width: 100px;">
+<script>
+  const emojis = [
+    "https://cdn-icons-png.flaticon.com/512/180/180870.png", // 初始表情
+    "https://cdn-icons-png.flaticon.com/512/1597/1597333.png", // 开心表情
+    "https://cdn-icons-png.flaticon.com/512/2876/2876408.png"  // 搞怪表情
+  ];
+  let currentIndex = 0;
+  document.getElementById("emoji").onclick = () => {
+    currentIndex = (currentIndex + 1) % emojis.length;
+    document.getElementById("emoji").src = emojis[currentIndex];
+  };
+</script>
+    <!-- 猜数字游戏 -->
+<div>
+  <h3>来玩猜数字！1 - 100 之间～</h3>
+  <input type="number" id="guessInput" placeholder="输入数字">
+  <button onclick="checkGuess()">提交</button>
+  <p id="result"></p >
+</div>
+<script>
+  const target = Math.floor(Math.random() * 100) + 1; // 随机目标数字
+  function checkGuess() {
+    const guess = parseInt(document.getElementById("guessInput").value);
+    const result = document.getElementById("result");
+    if (isNaN(guess) || guess < 1 || guess > 100) {
+      result.innerText = "请输入 1 - 100 的数字！";
+    } else if (guess === target) {
+      result.innerText = "猜对啦！你也太会猜了吧 🎉";
+    } else if (guess < target) {
+      result.innerText = "太小啦！再大胆点～";
+    } else {
+      result.innerText = "太大啦！收敛一点～";
+    }
+  }
+</script>
+    <!-- 鼠标跟随小尾巴 -->
+<div id="follower" style="position: fixed; width: 20px; height: 20px; 
+                          background: linear-gradient(45deg, #ff6b6b, #4ecdc4); 
+                          border-radius: 50%; pointer-events: none; z-index: 9999;"></div>
+<script>
+  document.addEventListener("mousemove", (e) => {
+    const follower = document.getElementById("follower");
+    follower.style.left = e.clientX + "px";
+    follower.style.top = e.clientY + "px";
+  });
+</script>
+    <!-- 夜间模式切换 -->
+<button onclick="toggleDarkMode()">切换夜间模式</button>
+<style>
+  .dark-mode {
+    background-color: #121212;
+    color: #fff;
+  }
+</style>
+<script>
+  function toggleDarkMode() {
+    document.body.classList.toggle("dark-mode");
+  }
+</script>
   </body>
 </html>
