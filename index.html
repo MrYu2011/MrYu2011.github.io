@@ -16,21 +16,6 @@
   }
   type();
 </script>
-    <!-- 点击换表情包 -->
-< img id="emoji" src="https://cdn-icons-png.flaticon.com/512/180/180870.png" 
-     alt="互动表情包" style="cursor: pointer; width: 100px;">
-<script>
-  const emojis = [
-    "https://cdn-icons-png.flaticon.com/512/180/180870.png", // 初始表情
-    "https://cdn-icons-png.flaticon.com/512/1597/1597333.png", // 开心表情
-    "https://cdn-icons-png.flaticon.com/512/2876/2876408.png"  // 搞怪表情
-  ];
-  let currentIndex = 0;
-  document.getElementById("emoji").onclick = () => {
-    currentIndex = (currentIndex + 1) % emojis.length;
-    document.getElementById("emoji").src = emojis[currentIndex];
-  };
-</script>
     <!-- 猜数字游戏 -->
 <div>
   <h3>来玩猜数字！1 - 100 之间～</h3>
